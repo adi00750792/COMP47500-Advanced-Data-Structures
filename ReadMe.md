@@ -4,7 +4,6 @@ Methods of CustomQueue:
 **enqueue(T item)**:
 Adds the specified item to the rear of the queue.
 Parameters:
-
 item: The element to be added to the queue.
 Returns:
 Nothing. The item is added to the queue.
