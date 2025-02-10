@@ -16,9 +16,5 @@ public class Test {
 
 		System.out.println(stack.pop());
 		System.out.println("Size = " + stack.size());
-
-		
 	}
-	
-	
 }
