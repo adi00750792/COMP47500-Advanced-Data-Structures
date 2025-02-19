@@ -14,6 +14,7 @@ import java.util.List;
 
 public class ProcessScheduler {
     private CustomQueue<Process> processQueue = new CustomQueue<>();
+    private Stack<Process> processStack = new Stack<>();
     private boolean useStack;
 
     public ProcessScheduler(boolean useStack) {
@@ -52,8 +53,14 @@ public class ProcessScheduler {
        
    }
     
-    // Simulate FIFO CPU scheduling
-    public void scheduleUsingQueue() {
+    public void addToStack(List<Process> processes) {
+   	 for(Process p : processes) {
+         	this.processStack.push(p);;
+         }
+   }
+    
+    // Simulate FIFO CPU scheduling using queue
+    public long scheduleUsingQueue() {
     	long startTime = System.currentTimeMillis();
     	while(! this.processQueue.isEmpty()) {
     		Process process = this.processQueue.dequeue();
@@ -68,7 +75,37 @@ public class ProcessScheduler {
     	long endTime = System.currentTimeMillis();
     	long executionTime = endTime - startTime;
         System.out.println("All processes scheduled in " + executionTime + " ms using Queue.");
+        return executionTime;
        
+    }
+    
+    // Simulate FIFO CPU scheduling using stack
+    public long scheduleUsingStack() {
+    	long startTime = System.currentTimeMillis();
+    	
+    	while(! this.processStack.isEmpty()) {
+    		Stack<Process> reverseStack = new Stack<>();
+    		while(! this.processStack.isEmpty()) {
+        		Process process = this.processStack.pop();
+        		reverseStack.push(process);
+        	}
+    		
+    		try 
+    		{
+	    		while(! reverseStack.isEmpty()) {
+	        		Process process = reverseStack.pop();
+		            Thread.sleep((long)process.getBurstTime());
+		            System.out.println("Process executed : "+process.getProcessId()+" Process Arrival Time: "+ process.getArrivalTime());
+	        	}
+    		}
+    		catch(InterruptedException e) {
+                e.printStackTrace();
+            }
+    	}
+    	long endTime = System.currentTimeMillis();
+    	long executionTime = endTime - startTime;
+        System.out.println("All processes scheduled in " + executionTime + " ms using " + (useStack ? "Stack" : "Queue") + ".");
+        return executionTime;
     }
 
 
@@ -80,6 +117,15 @@ public class ProcessScheduler {
         List<Process> processes = queueScheduler.loadProcessesFromExcel(excelFilePath);
         processes.sort(Comparator.comparingInt(p -> p.getArrivalTime()));
         queueScheduler.addToQueue(processes);
-        queueScheduler.scheduleUsingQueue();
+        long queueTime = queueScheduler.scheduleUsingQueue();
+        
+        ProcessScheduler stackScheduler = new ProcessScheduler(true);
+        stackScheduler.addToStack(processes);
+        long stackTime = stackScheduler.scheduleUsingStack();
+        
+        System.out.println("Queue Scheduling Time: " + queueTime + " ms");
+        System.out.println("Stack Scheduling Time: " + stackTime + " ms");
+
+        System.out.println((queueTime < stackTime ? "Queue" : "Stack") + " performed better.");
     }
 }
