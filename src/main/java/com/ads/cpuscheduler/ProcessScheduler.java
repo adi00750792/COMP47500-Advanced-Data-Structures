@@ -67,14 +67,14 @@ public class ProcessScheduler {
     		// Simulate process execution
           try {
               Thread.sleep((long)process.getBurstTime());
-              System.out.println("Process executed : "+process.getProcessId()+" Process Arrival Time: "+ process.getArrivalTime());
-          } catch (InterruptedException e) {
+             // System.out.println("Process executed : "+process.getProcessId()+" Process Arrival Time: "+ process.getArrivalTime());
+          } catch (Exception e) {
               e.printStackTrace();
           }
     	}
     	long endTime = System.currentTimeMillis();
     	long executionTime = endTime - startTime;
-        System.out.println("All processes scheduled in " + executionTime + " ms using Queue.");
+       System.out.println("All processes scheduled in " + executionTime + " ms using Queue.");
         return executionTime;
        
     }
@@ -92,13 +92,15 @@ public class ProcessScheduler {
     		
     		try 
     		{
+          		Process process = reverseStack.pop();
+          		Thread.sleep((long)process.getBurstTime());
 	    		while(! reverseStack.isEmpty()) {
-	        		Process process = reverseStack.pop();
-		            Thread.sleep((long)process.getBurstTime());
-		            System.out.println("Process executed : "+process.getProcessId()+" Process Arrival Time: "+ process.getArrivalTime());
+	    			this.processStack.push(reverseStack.pop());
+		   
+		           // System.out.println("Process executed : "+process.getProcessId()+" Process Arrival Time: "+ process.getArrivalTime());
 	        	}
     		}
-    		catch(InterruptedException e) {
+    		catch(Exception e) {
                 e.printStackTrace();
             }
     	}
@@ -110,7 +112,9 @@ public class ProcessScheduler {
 
 
     public static void main(String[] args) {
-    	String excelFilePath = "src/main/resources/CPU_Scheduling_Dataset__1000_Entries_.xlsx";
+    	String excelFilePath = "src/main/resources/CPU_Scheduling_Dataset_10000_Entries.xlsx";
+    	
+//    	/COMP47500-Advanced-Data-Structures/src/main/resources/CPU_Scheduling_Dataset__1000_Entries_.xlsx
     	
     	//Using Queue
         ProcessScheduler queueScheduler = new ProcessScheduler(false);
