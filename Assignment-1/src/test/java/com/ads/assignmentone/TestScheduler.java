@@ -15,13 +15,13 @@ public class TestScheduler {
 			System.out.println(size);
 			String excelFilePath = "src/main/resources/CPU_Scheduling_Dataset_"+ size +"_Entries.xlsx";
 	    	
-	    	ProcessScheduler queueScheduler = new ProcessScheduler(false,100000);
+	    	ProcessScheduler queueScheduler = new ProcessScheduler(false);
 	        List<Process> processes = queueScheduler.loadProcessesFromExcel(excelFilePath);
 	        processes.sort(Comparator.comparingInt(p -> p.getArrivalTime()));
 	        queueScheduler.addToQueue(processes);
 	        long queueTime = queueScheduler.scheduleUsingQueue();
 	        
-	        ProcessScheduler stackScheduler = new ProcessScheduler(true,100000);
+	        ProcessScheduler stackScheduler = new ProcessScheduler(true);
 	        stackScheduler.addToStack(processes);
 	        long stackTime = stackScheduler.scheduleUsingStack();
 	        

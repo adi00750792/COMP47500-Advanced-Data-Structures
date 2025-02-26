@@ -5,31 +5,18 @@ public class CustomQueue<T> implements Queue<T> {
 	//Used linkedlist to implement the stack
 	private LinkedList<T> list;
    
-	//Specify the capacity of the queue
-	private int sizeCapacity;
-   
 	//constructor to initialize the
-	public CustomQueue(int sizeCapacity) {
-		this.sizeCapacity = sizeCapacity;
+	public CustomQueue() {
+//		this.sizeCapacity = sizeCapacity;
 		list = new LinkedList<T>(); 
-	}
-	
-    public int getSizeCapacity() {
-		return sizeCapacity;
 	}
 
 	@Override
     public void enqueue (T item) {
-		// check if the queue capacity is full, if queue is full then removes the first
-    	if(this.sizeCapacity <= this.list.size()) {
-    		this.list.removeFirst();
-    	}
     	// add the item to the end of the queue.
     	this.list.add(item);
     }
 
-	
-	
     @Override
     public T dequeue () {
     	// check is the queue is empty if empty throw the exception

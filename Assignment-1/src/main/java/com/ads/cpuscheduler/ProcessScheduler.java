@@ -19,12 +19,12 @@ public class ProcessScheduler {
     private CustomStack<Process> processStack;
     private boolean useStack;
 
-    public ProcessScheduler(boolean useStack,int capacity) {
+    public ProcessScheduler(boolean useStack) {
         this.useStack = useStack;
         if(useStack)
-        	this.processStack = new CustomStack(capacity);
+        	this.processStack = new CustomStack();
         else
-        	this.processQueue = new CustomQueue(capacity);
+        	this.processQueue = new CustomQueue();
     }
 
     // Load processes from an Excel file
@@ -90,7 +90,7 @@ public class ProcessScheduler {
     	long startTime = System.currentTimeMillis();
     	
     	while(! this.processStack.isEmpty()) {
-    		CustomStack<Process> reverseStack = new CustomStack<>(this.processStack.getStackCapacity());
+    		CustomStack<Process> reverseStack = new CustomStack<>();
     		// reverse the stack before executing the process
     		while(! this.processStack.isEmpty()) {
         		Process process = this.processStack.pop();
@@ -118,15 +118,15 @@ public class ProcessScheduler {
 
 
     public static void main(String[] args) {
-    	String excelFilePath = "src/main/resources/CPU_Scheduling_Dataset_10000_Entries.xlsx";
+    	String excelFilePath = "src/main/resources/CPU_Scheduling_Dataset_1000_Entries.xlsx";
     	
-    	ProcessScheduler queueScheduler = new ProcessScheduler(false,100000);
+    	ProcessScheduler queueScheduler = new ProcessScheduler(false);
         List<Process> processes = queueScheduler.loadProcessesFromExcel(excelFilePath);
         processes.sort(Comparator.comparingInt(p -> p.getArrivalTime()));
         queueScheduler.addToQueue(processes);
         long queueTime = queueScheduler.scheduleUsingQueue();
         
-        ProcessScheduler stackScheduler = new ProcessScheduler(true,100000);
+        ProcessScheduler stackScheduler = new ProcessScheduler(true);
         stackScheduler.addToStack(processes);
         long stackTime = stackScheduler.scheduleUsingStack();
         

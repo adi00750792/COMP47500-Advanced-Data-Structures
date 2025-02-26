@@ -9,26 +9,15 @@ public class CustomStack <T> implements Stack<T>{
 	//Used linkedlist to implement the stack
 	private LinkedList<T> list;
 	
-	//Specify the capacity of the stack
-	private int stackCapacity;
-	
+
 	//Constructor to initialize the CustomStack
-	public CustomStack(int stackCapacity) {
-		this.stackCapacity = stackCapacity;
+	public CustomStack() {
 		list = new LinkedList<T>(); 
 	}
 	
-	//return the stack capacity
-	public int getStackCapacity() {
-		return stackCapacity;
-	}
 
-	
 	@Override
 	public void push(T item) {
-		//Check if stack is full is stack is full it will remove the last item from the stack.
-		if(this.stackCapacity <= this.list.size())
-			this.list.removeLast();
 		//Add the item to the start of the stack.
 		this.list.addFirst(item);	
 	}
