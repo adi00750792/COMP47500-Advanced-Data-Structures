@@ -15,12 +15,16 @@ import java.util.Comparator;
 import java.util.List;
 
 public class ProcessScheduler {
-    private CustomQueue<Process> processQueue = new CustomQueue<>();
-    private Stack<Process> processStack = new CustomStack<>();
+    private CustomQueue<Process> processQueue;
+    private CustomStack<Process> processStack;
     private boolean useStack;
 
-    public ProcessScheduler(boolean useStack) {
+    public ProcessScheduler(boolean useStack,int capacity) {
         this.useStack = useStack;
+        if(useStack)
+        	this.processStack = new CustomStack(capacity);
+        else
+        	this.processQueue = new CustomQueue(capacity);
     }
 
     // Load processes from an Excel file
@@ -86,7 +90,8 @@ public class ProcessScheduler {
     	long startTime = System.currentTimeMillis();
     	
     	while(! this.processStack.isEmpty()) {
-    		CustomStack<Process> reverseStack = new CustomStack<>();
+    		CustomStack<Process> reverseStack = new CustomStack<>(this.processStack.getStackCapacity());
+    		// reverse the stack before executing the process
     		while(! this.processStack.isEmpty()) {
         		Process process = this.processStack.pop();
         		reverseStack.push(process);
@@ -94,6 +99,7 @@ public class ProcessScheduler {
     		
     		try 
     		{
+    			// Removes the process from the top.
           		Process process = reverseStack.pop();
           		Thread.sleep((long)process.getBurstTime());
 	    		while(! reverseStack.isEmpty()) {
@@ -112,15 +118,15 @@ public class ProcessScheduler {
 
 
     public static void main(String[] args) {
-    	String excelFilePath = "src/main/resources/CPU_Scheduling_Dataset_10_Entries.xlsx";
+    	String excelFilePath = "src/main/resources/CPU_Scheduling_Dataset_10000_Entries.xlsx";
     	
-    	ProcessScheduler queueScheduler = new ProcessScheduler(false);
+    	ProcessScheduler queueScheduler = new ProcessScheduler(false,100000);
         List<Process> processes = queueScheduler.loadProcessesFromExcel(excelFilePath);
         processes.sort(Comparator.comparingInt(p -> p.getArrivalTime()));
         queueScheduler.addToQueue(processes);
         long queueTime = queueScheduler.scheduleUsingQueue();
         
-        ProcessScheduler stackScheduler = new ProcessScheduler(true);
+        ProcessScheduler stackScheduler = new ProcessScheduler(true,100000);
         stackScheduler.addToStack(processes);
         long stackTime = stackScheduler.scheduleUsingStack();
         
